@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import airbyte as ab
 from datetime import datetime
-class AbstractDasboard(BaseModel):
+class AbstractDashboard(BaseModel): #Estava escrito AbstractDasboard
     streams: List[str]
     repository: str = ""
     token: str = ""
