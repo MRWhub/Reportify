@@ -29,10 +29,7 @@ dataclasses-json==0.6.7
 dpath==2.2.0
 duckdb==1.2.2
 duckdb_engine==0.13.6
-dunamai==1.23.1
-exceptiongroup==1.2.2
-filelock==3.18.0
-Flask==3.1.0
+dunam==3.1.0
 fonttools==4.57.0
 genson==1.3.0
 google-api-core==2.24.2
@@ -139,4 +136,7 @@ uuid7==0.1.0
 wcmatch==10.0
 Werkzeug==3.1.3
 whenever==0.6.17
-xmltodict==0.14.2
+xmltodict==0.14.2ai==1.23.1
+exceptiongroup==1.2.2
+filelock==3.18.0
+Flask
