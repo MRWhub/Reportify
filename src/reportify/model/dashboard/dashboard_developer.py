@@ -146,9 +146,14 @@ class DeveloperStats:
                 plt.title(f"📈 Throughput Quinzenal - {author}")
                 plt.ylabel("Issues Fechadas")
                 plt.xlabel("Período")
-                plt.xticks(range(len(throughput.index)), 
-                           [d.strftime('%Y-%m-%d') for d in throughput.index], 
-                           rotation=45, ha='right')
+                labels = [d.strftime('%Y-%m-%d') for d in throughput.index]
+
+                plt.figure(figsize=(8, 3))
+                plt.plot(labels, throughput.values, marker='o')
+                plt.title(f"📈 Throughput Quinzenal - {author}")
+                plt.ylabel("Issues Fechadas")
+                plt.xlabel("Período")
+                plt.xticks(rotation=45, ha='right')
                 plt.tight_layout()
 
                 buf2 = BytesIO()

@@ -1,11 +1,11 @@
-from .dashboard_abstract import AbstractDasboard
+from .dashboard_abstract import AbstractDashboard
 from typing import List, Any
 import pandas as pd
 import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-class OrganizationalDashboard (AbstractDasboard):
+class OrganizationalDashboard (AbstractDashboard):
     streams: List[str] = ["issues"]
     issues_df: Any = None
     monte_carlo_simulations:int = 1000
