@@ -12,7 +12,7 @@ authors = [
   { name = "Kevin Kliss" },
   { name = "Miguel Rabelo",email="miguelrabelo538@gmail.com" },
   { name = "Thiago Deps" },
-  { name = "Paulo Sérgio Dos Santos Júnior" , email = "paulossjunior@gmail.com"},
+  { name = "Paulo Sérgio Dos Santos Júnior",  email = "paulossjunior@gmail.com"},
   { name = "Matheus Abreu" }
 ]
 keywords = ["reportify-ifes"]
@@ -25,7 +25,7 @@ where = ["src"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.0.1"
+version = "0.1.0"
 tag_format = "v$version"
 version_scheme = "semver"
 update_changelog_on_bump = true
