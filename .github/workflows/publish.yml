@@ -23,6 +23,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
 
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update version in pyproject.toml
+        run: python update_version.py ${{ steps.get_version.outputs.version }}
+
       - name: Build the package
         run: |
           rm -rf dist/ src/*.egg-info
