@@ -6,7 +6,7 @@ import base64
 from io import BytesIO
 from dotenv import load_dotenv
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class DeveloperStats:
     def __init__(self, save_func,save_directory):
@@ -90,10 +90,14 @@ class DeveloperStats:
         for author, group in grouped:
             md += f"## 👤 {author}\n\n"
 
-            # Calcular contagens por período
-            created_counts = group.groupby("created_period").size()
-            # Filtrar valores NaN do closed_period antes de agrupar
-            valid_closed = group.dropna(subset=["closed_period"])
+            # Filtrar para os últimos 3 meses
+            now = datetime.now()
+            time_ago = now - pd.DateOffset(months=6)
+            group_recent = group[group["created_period"] >= time_ago]
+
+            # Calcular contagens por período (apenas últimos 3 meses)
+            created_counts = group_recent.groupby("created_period").size()
+            valid_closed = group_recent.dropna(subset=["closed_period"])
             closed_counts = valid_closed.groupby("closed_period").size()
 
             # Tabela Prometido x Realizado
@@ -117,22 +121,23 @@ class DeveloperStats:
             md += "\n"
 
             # Gráfico Prometido vs Realizado
-            plt.figure(figsize=(8, 3))
-            throughput_df.plot(kind='bar')
-            plt.title(f"📊 Prometido vs Realizado - {author}")
-            plt.ylabel("Issues")
-            plt.xlabel("Período")
-            plt.xticks(range(len(throughput_df.index)), 
-                       [d.strftime('%Y-%m-%d') for d in throughput_df.index], 
-                       rotation=45, ha='right')
-            plt.tight_layout()
+            if not throughput_df.empty:
+                ax = throughput_df.plot(kind='bar', figsize=(8, 3))
+                ax.set_title(f"📊 Prometido vs Realizado (Ultimos 6 meses) - {author}")
+                ax.set_ylabel("Issues")
+                ax.set_xlabel("Período")
+                ax.set_xticks(range(len(throughput_df.index)))
+                ax.set_xticklabels([d.strftime('%Y-%m-%d') for d in throughput_df.index], rotation=45, ha='right')
+                plt.tight_layout()
 
-            buf = BytesIO()
-            plt.savefig(buf, format="png")
-            plt.close()
-            buf.seek(0)
-            img_base64 = base64.b64encode(buf.read()).decode("utf-8")
-            md += f"![Gráfico Prometido vs Realizado](data:image/png;base64,{img_base64})\n\n"
+                buf = BytesIO()
+                plt.savefig(buf, format="png")
+                plt.close()
+                buf.seek(0)
+                img_base64 = base64.b64encode(buf.read()).decode("utf-8")
+                md += f"![Gráfico Prometido vs Realizado](data:image/png;base64,{img_base64})\n\n"
+            else:
+                md += "_Nenhum dado de prometido vs realizado disponível nos últimos 3 meses._\n\n"
 
             # Gráfico de Throughput (fechadas)
             # Usar valores filtrados sem NaN para o throughput
@@ -140,20 +145,19 @@ class DeveloperStats:
             
             if not valid_closed.empty:
                 throughput = valid_closed.groupby("closed_period").size().sort_index()
-                
-                plt.figure(figsize=(8, 3))
-                throughput.plot(kind='line', marker='o')
-                plt.title(f"📈 Throughput Quinzenal - {author}")
-                plt.ylabel("Issues Fechadas")
-                plt.xlabel("Período")
+                num_points = len(throughput)
+                # Defina largura mínima e máxima
+                width = max(6, min(2 + num_points * 0.8, 30))
+                height = 5 + min(num_points // 8, 5)  
+
                 labels = [d.strftime('%Y-%m-%d') for d in throughput.index]
 
-                plt.figure(figsize=(8, 3))
+                plt.figure(figsize=(width, height))
                 plt.plot(labels, throughput.values, marker='o')
                 plt.title(f"📈 Throughput Quinzenal - {author}")
                 plt.ylabel("Issues Fechadas")
                 plt.xlabel("Período")
-                plt.xticks(rotation=45, ha='right')
+                plt.xticks(rotation=45, ha='right' , fontsize=16)
                 plt.tight_layout()
 
                 buf2 = BytesIO()
