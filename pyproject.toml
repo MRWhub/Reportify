@@ -26,7 +26,7 @@ where = ["src"]
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "v$version"
-version = "0.1.0"
+version = "0.3.0"
 version_scheme = "semver"
 update_changelog_on_bump = true
 major_version_zero = true

@@ -1,8 +1,8 @@
-from model.dashboard.dashboard_developer import DeveloperStats
-from model.dashboard.dashboard_organization import OrganizationalDashboard
-from model.dashboard.dashboard_repository import GitHubIssueStats
-from model.dashboard.dashboard_team import TeamStats
-from model.dashboard.dashboard_team_graph import CollaborationGraph
+from reportify.model.dashboard.dashboard_developer import DeveloperStats
+from reportify.model.dashboard.dashboard_organization import OrganizationalDashboard
+from reportify.model.dashboard.dashboard_repository import GitHubIssueStats
+from reportify.model.dashboard.dashboard_team import TeamStats
+from reportify.model.dashboard.dashboard_team_graph import CollaborationGraph
 
 class ReportController:
     def __init__(self, salvar_markdown, report_dir):

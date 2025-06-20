@@ -1,9 +1,13 @@
-from controller.report_controller import ReportController
+
 from datetime import datetime
 import os, shutil
+import sys
+import os
 
 class Report:
+
     def __init__(self):
+        sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'reportify')))
         now = datetime.now()
         self.report_dir = os.path.join("Reports", f"Report{now.day:02}{now.month:02}{now.year}-{now.hour:02}h:{now.minute:02}min")
         os.makedirs(self.report_dir, exist_ok=True)
@@ -16,6 +20,7 @@ class Report:
         print(f"📄 Markdown salvo em: {path}")
 
     def gerar(self):
+        from .controller.report_controller import ReportController
         controller = ReportController(self.salvar_markdown, self.report_dir)
         controller.gerar_todos()
         controller.open_view()  
