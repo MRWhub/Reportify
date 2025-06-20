@@ -20,7 +20,7 @@ class Report:
         print(f"📄 Markdown salvo em: {path}")
 
     def gerar(self):
-        from reportify.controller.report_controller import ReportController
+        from .controller.report_controller import ReportController
         controller = ReportController(self.salvar_markdown, self.report_dir)
         controller.gerar_todos()
         controller.open_view()  
