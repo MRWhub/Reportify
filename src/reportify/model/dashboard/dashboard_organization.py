@@ -4,7 +4,7 @@ import pandas as pd
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-
+from datetime import datetime
 class OrganizationalDashboard (AbstractDashboard):
     streams: List[str] = ["issues"]
     issues_df: Any = None
@@ -73,7 +73,7 @@ class OrganizationalDashboard (AbstractDashboard):
         ax2.tick_params(axis='y', labelsize=10)
         ax2.legend(loc="upper right", fontsize=10)
         
-        plt.title("Entregas Quinzenais da Organização", fontsize=14, pad=20)
+        plt.title("Entregas Quinzenais da Organização (Ultimos 6 meses)", fontsize=14, pad=20)
         plt.tight_layout()
         plt.savefig(filename)
         plt.close()
@@ -125,7 +125,7 @@ class OrganizationalDashboard (AbstractDashboard):
         plt.xticks(x, periods_list, rotation=45)
         plt.xlabel("Período", fontsize=12)
         plt.ylabel("Issues acumuladas", fontsize=12)
-        plt.title("🔥 Burn-up Chart da Organização", fontsize=14, pad=20)
+        plt.title("🔥 Burn-up Chart da Organização  (Ultimos 6 meses) ", fontsize=14, pad=20)
         plt.legend(fontsize=10)
         plt.grid(axis='y', linestyle='--', alpha=0.3)
         plt.tight_layout()
@@ -395,31 +395,36 @@ class OrganizationalDashboard (AbstractDashboard):
 
     def generate_markdown_report(self, stats: dict, weekly_data: pd.DataFrame, mc_results: dict) -> str:
         """Generate complete markdown report for the organization."""
+        # Limitar aos últimos 6 meses
+        now = datetime.now()
+        six_months_ago = now - pd.DateOffset(months=6)
+        filtered_weekly = weekly_data[weekly_data["period"] >= six_months_ago]
+
         # Start with the header and summary stats
         markdown = self.generate_markdown_header(stats)
         markdown += "\n---\n"
         
         # Add biweekly delivery section
-        weekly_file = self.plot_weekly_delivery(weekly_data)
+        weekly_file = self.plot_weekly_delivery(filtered_weekly)
         markdown += "## 📊 Entregas Quinzenais da Organização\n\n"
         markdown += f"![Organization biweekly chart]({weekly_file})\n\n"
         
         # Add velocity stats
-        avg_velocity = weekly_data["delivered"].mean().round(2)
+        avg_velocity = filtered_weekly["delivered"].mean().round(2)
         markdown += f"**Velocidade média quinzenal:** {avg_velocity} issues/quinzena\n\n"
         
         # Add biweekly data table
         markdown += "| Período | Prometido | Entregue | % Concluído | Velocidade |\n"
         markdown += "|--------|------------|----------|--------------|------------|\n"
         
-        for _, row in weekly_data.sort_values("period").iterrows():
+        for _, row in filtered_weekly.sort_values("period").iterrows():
             period = row['period'].strftime('%Y-%m-%d')
             markdown += f"| {period} | {int(row['promised'])} | {int(row['delivered'])} | {round(row['percent_completed'], 1)}% | {int(row['delivered'])} |\n"
         
         markdown += "\n"
         
         # Add burnup chart section
-        burnup_file, _ = self.plot_burnup_chart(weekly_data)
+        burnup_file, _ = self.plot_burnup_chart(filtered_weekly)
         markdown += "## 🔥 Burn-up Chart da Organização\n\n"
         markdown += f"![Organization burnup chart]({burnup_file})\n\n"
         
