@@ -16,8 +16,7 @@ class DeveloperStats:
         load_dotenv()
         self.token = token
         self.repository = repo # Ex: 'leds-conectafapes/planner'
-        print(f"🔑 Usando repositório: {self.repository}"
-    f" com token: {self.token[:4]}... (ocultando o restante)")
+        print(f"🔑 Usando repositório: {self.repository} com token: {self.token[:4]}... (ocultando o restante)")
         if not self.token or not self.repository:
             raise ValueError("Configure GITHUB_TOKEN e GITHUB_REPOSITORY no .env")
         self.cache = ab.get_default_cache()
@@ -205,11 +204,15 @@ class DeveloperStats:
             md += "\n---\n\n"
 
 
+            md_author = f"# 📊 Estatísticas Individuais - {author}\n\n"
+            md_author += f"## 👤 {author}\n\n"
+            md_author += md.split(f"## 👤 {author}")[1] 
 
+            safe_author = author.replace("/", "_").replace("\\", "_").replace(" ", "_")
+            filename = f"developer_stats_{safe_author}.md"
+            self.save_func(self.save_directory, filename, md_author)
+        
 
-        
-        
-        
         self.save_func(self.save_directory,'developer_stats.md',md )
 
 
