@@ -48,3 +48,28 @@ class CredentialsLoader:
         print(f"🔑 Token: {self.token[:4]}... (oculto)")
 
         return self.token, self.repository
+
+class DashboardSelection:
+    """
+    Classe responsável por exibir o menu e capturar a seleção
+    dos dashboards que o usuário deseja gerar.
+    """
+
+    @staticmethod
+    def menu():
+        print("\n📊 Selecione os relatórios que deseja gerar:")
+        print("1 - Developer Stats")
+        print("2 - Organization Stats")
+        print("3 - Repository Stats (Issues)")
+        print("4 - Team Stats")
+        print("5 - Collaboration Graph")
+        print("0 - Todos")
+
+        selections = input("\nDigite os números separados por vírgula (ex: 1,3,5 ou 0 para todos): ")
+        selections = selections.replace(" ", "").split(",")
+
+        if "0" in selections:
+            selections = ["1", "2", "3", "4", "5"]
+
+        print(f"\n🚀 Gerando os relatórios selecionados: {selections}")
+        return selections

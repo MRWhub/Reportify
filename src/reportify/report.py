@@ -4,7 +4,7 @@ import os, shutil
 import sys
 import os
 
-from controller.report_controller import ReportController
+from reportify.controller.report_controller import ReportController
 class Report:
 
     def __init__(self):
@@ -22,7 +22,7 @@ class Report:
             f.write(content)
         print(f"📄 Markdown salvo em: {path}")
 
-    def gerar(self):
+    def run(self):
         
         controller = ReportController(self.salvar_markdown, self.report_dir)
         controller.open_view()  
@@ -35,5 +35,5 @@ class Report:
             print("🧹 Cache removido.")
         '''
 if __name__ == "__main__":
-    Report().gerar()
+    Report().run()
     

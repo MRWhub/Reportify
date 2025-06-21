@@ -14,8 +14,13 @@ charts_monte_carlo/
 organization_charts/
 charts_weekly/
 Reports/
-
-
+src/.cache/
+src/.venv-source-github/
+src/charts_burnup/
+src/charts_monte_carlo/
+src/organization_charts/
+src/charts_weekly/
+src/Reports/
 
 # Distribution / packaging
 .Python
