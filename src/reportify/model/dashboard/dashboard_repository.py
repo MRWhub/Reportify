@@ -15,10 +15,12 @@ matplotlib.rcParams['font.sans-serif'] = ['Noto Color Emoji', 'DejaVu Sans']
 
 
 class GitHubIssueStats:
-    def __init__(self,save_func,report_dir):
+    def __init__(self,save_func,report_dir,token,repo):
         load_dotenv()
-        self.repository = os.getenv("GITHUB_REPOSITORY")
-        self.token = os.getenv("GITHUB_TOKEN")
+        self.repository = repo
+        self.token = token
+        print(f"🔑 Usando repositório: {self.repository}"
+    f" com token: {self.token[:4]}... (ocultando o restante)")
         self.issues_df = pd.DataFrame()
         self.monte_carlo_simulations = 1000  # Number of Monte Carlo simulations to run
         self.save_func = save_func
@@ -340,7 +342,7 @@ class GitHubIssueStats:
             plt.savefig(os.path.join(output_dir, vel_filename))
             plt.close()
 
-    def append_monte_carlo_results_to_markdown(self, monte_carlo_results: dict, output_dir="charts_monte_carlo") -> str:
+    def append_monte_carlo_results_to_markdown(self, monte_carlo_results: dict, output_dir="/charts_monte_carlo") -> str:
         """Add Monte Carlo simulation results to the markdown report."""
         markdown = "\n---\n# 🎲 Simulação Monte Carlo\n\n"
         markdown += "A simulação Monte Carlo usa dados históricos de velocidade para prever datas de conclusão com diferentes níveis de confiança:\n\n"
@@ -356,10 +358,10 @@ class GitHubIssueStats:
             
             # Add Monte Carlo charts if available
             if results['simulation_data']:
-                mc_file = f"{output_dir}/{safe_repo}_monte_carlo.png"
-                vel_file = f"{output_dir}/{safe_repo}_velocity_dist.png"
-                markdown += f"![{repo} monte carlo simulation]({mc_file})\n\n"
-                markdown += f"![{repo} velocity distribution]({vel_file})\n\n"
+                mc_file = f"/{output_dir}/{safe_repo}_monte_carlo.png"
+                vel_file = f"/{output_dir}/{safe_repo}_velocity_dist.png"
+                markdown += f"![{repo} monte carlo simulation](/{mc_file})\n\n"
+                markdown += f"![{repo} velocity distribution](/{vel_file})\n\n"
             
             # Create a table with the results
             markdown += "#### Previsões de Velocidade e Conclusão\n\n"
@@ -442,13 +444,13 @@ class GitHubIssueStats:
         
         return markdown
 
-    def append_weekly_charts_to_markdown(self, repo_weekly_data: dict, monte_carlo_results: dict, output_dir="charts_weekly") -> str:
+    def append_weekly_charts_to_markdown(self, repo_weekly_data: dict, monte_carlo_results: dict, output_dir="/charts_weekly") -> str:
         markdown = "\n---\n# Gráficos e Previsões por Repositório\n\n"
         
         for repo, df in repo_weekly_data.items():
             safe_repo = repo.replace("/", "_")
             weekly_file = f"{output_dir}/{safe_repo}_weekly.png"
-            burnup_file = f"charts_burnup/{safe_repo}_burnup.png"
+            burnup_file = f"/charts_burnup/{safe_repo}_burnup.png"
             markdown += f"## `{repo}`\n\n"
             
             # Weekly Charts Section
@@ -508,8 +510,8 @@ class GitHubIssueStats:
                 
                 # Add Monte Carlo charts if available
                 if results['simulation_data']:
-                    mc_file = f"charts_monte_carlo/{safe_repo}_monte_carlo.png"
-                    vel_file = f"charts_monte_carlo/{safe_repo}_velocity_dist.png"
+                    mc_file = f"/charts_monte_carlo/{safe_repo}_monte_carlo.png"
+                    vel_file = f"/charts_monte_carlo/{safe_repo}_velocity_dist.png"
                     markdown += f"![{repo} monte carlo simulation]({mc_file})\n\n"
                     markdown += f"![{repo} velocity distribution]({vel_file})\n\n"
                 

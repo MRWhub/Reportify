@@ -1,1 +1,1 @@
-from .dashboard_view import DashboardView
+from .dashboard_view import CredentialsLoader

@@ -4,10 +4,13 @@ import os, shutil
 import sys
 import os
 
+from controller.report_controller import ReportController
 class Report:
 
     def __init__(self):
-        sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'reportify')))
+
+
+        print('📂 Diretório atual de execução:', os.getcwd())
         now = datetime.now()
         self.report_dir = os.path.join("Reports", f"Report{now.day:02}{now.month:02}{now.year}-{now.hour:02}h:{now.minute:02}min")
         os.makedirs(self.report_dir, exist_ok=True)
@@ -20,16 +23,17 @@ class Report:
         print(f"📄 Markdown salvo em: {path}")
 
     def gerar(self):
-        from .controller.report_controller import ReportController
-        controller = ReportController(self.salvar_markdown, self.report_dir)
-        controller.gerar_todos()
-        controller.open_view()  
-        print(f"📂 Relatório completo em: {self.report_dir}")
         
+        controller = ReportController(self.salvar_markdown, self.report_dir)
+        controller.open_view()  
+        print("✅ Relatório gerado com sucesso!")
+       
+        print(f"📂 Relatório completo em: {self.report_dir}")
+        '''
         if os.path.exists(".cache"):
             shutil.rmtree(".cache")
             print("🧹 Cache removido.")
-
+        '''
 if __name__ == "__main__":
     Report().gerar()
     

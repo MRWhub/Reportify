@@ -7,14 +7,17 @@ from io import BytesIO
 from dotenv import load_dotenv
 import json
 from datetime import datetime, timedelta
+from pathlib import Path
 
 class DeveloperStats:
-    def __init__(self, save_func,save_directory):
+    def __init__(self, save_func,save_directory,token,repo):
         self.save_func = save_func
         self.save_directory = save_directory
-        load_dotenv()   
-        self.token = os.getenv("GITHUB_TOKEN")
-        self.repository = os.getenv("GITHUB_REPOSITORY")  # Ex: 'leds-conectafapes/planner'
+        load_dotenv()
+        self.token = token
+        self.repository = repo # Ex: 'leds-conectafapes/planner'
+        print(f"🔑 Usando repositório: {self.repository}"
+    f" com token: {self.token[:4]}... (ocultando o restante)")
         if not self.token or not self.repository:
             raise ValueError("Configure GITHUB_TOKEN e GITHUB_REPOSITORY no .env")
         self.cache = ab.get_default_cache()

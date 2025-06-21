@@ -8,12 +8,12 @@ from dotenv import load_dotenv
 import json
 
 class TeamStats:
-    def __init__(self,save_func,report_dir):
+    def __init__(self,save_func,report_dir,token,repo):
         self.save_func = save_func
         self.report_dir = report_dir
         load_dotenv()
-        self.token = os.getenv("GITHUB_TOKEN")
-        self.repository = os.getenv("GITHUB_REPOSITORY")  # Ex: 'leds-conectafapes/planner'
+        self.token = token
+        self.repository = repo # Ex: 'leds-conectafapes/planner'
         if not self.token or not self.repository:
             raise ValueError("Configure GITHUB_TOKEN e GITHUB_REPOSITORY no .env")
         self.cache = ab.get_default_cache()

@@ -45,7 +45,7 @@ class OrganizationalDashboard (AbstractDashboard):
 
     def plot_weekly_delivery(self, weekly_data: pd.DataFrame):
         """Create biweekly delivery chart for the entire organization."""
-        filename = f"{self.output_dir}/organization_biweekly.png"
+        filename = f"/{self.output_dir}/organization_biweekly.png"
         
         periods = weekly_data["period"].dt.strftime("%Y-%m-%d")
         promised = weekly_data["promised"]
@@ -75,14 +75,14 @@ class OrganizationalDashboard (AbstractDashboard):
         
         plt.title("Entregas Quinzenais da Organização (Ultimos 6 meses)", fontsize=14, pad=20)
         plt.tight_layout()
-        plt.savefig(filename)
+        plt.savefig(f"{self.output_dir}/organization_biweekly.png")
         plt.close()
         
         return filename
 
     def plot_burnup_chart(self, weekly_data: pd.DataFrame):
         """Create burnup chart for the entire organization."""
-        filename = f"{self.output_dir}/organization_burnup.png"
+        filename = f"/{self.output_dir}/organization_burnup.png"
         
         # Sort by period and calculate cumulative metrics
         df = weekly_data.sort_values("period")
@@ -129,7 +129,7 @@ class OrganizationalDashboard (AbstractDashboard):
         plt.legend(fontsize=10)
         plt.grid(axis='y', linestyle='--', alpha=0.3)
         plt.tight_layout()
-        plt.savefig(filename)
+        plt.savefig(f"{self.output_dir}/organization_burnup.png")
         plt.close()
         
         return filename, df
@@ -267,7 +267,7 @@ class OrganizationalDashboard (AbstractDashboard):
             return None, None
         
         # Completion date histogram
-        mc_filename = f"{self.output_dir}/organization_monte_carlo.png"
+        mc_filename = f"/{self.output_dir}/organization_monte_carlo.png"
         plt.figure(figsize=(12, 6))
         
         # Extract completion dates
@@ -310,11 +310,11 @@ class OrganizationalDashboard (AbstractDashboard):
         plt.grid(axis='y', linestyle='--', alpha=0.3)
         plt.legend(fontsize=10)
         plt.tight_layout()
-        plt.savefig(mc_filename)
+        plt.savefig(f"{self.output_dir}/organization_monte_carlo.png")
         plt.close()
         
         # Velocity distribution chart
-        vel_filename = f"{self.output_dir}/organization_velocity_dist.png"
+        vel_filename = f"/{self.output_dir}/organization_velocity_dist.png"
         plt.figure(figsize=(12, 5))
         
         velocities = [sim['velocity'] for sim in mc_results['simulation_data']]
@@ -331,7 +331,7 @@ class OrganizationalDashboard (AbstractDashboard):
         plt.grid(axis='y', linestyle='--', alpha=0.3)
         plt.legend(fontsize=10)
         plt.tight_layout()
-        plt.savefig(vel_filename)
+        plt.savefig(f"{self.output_dir}/organization_velocity_dist.png")
         plt.close()
         
         return mc_filename, vel_filename

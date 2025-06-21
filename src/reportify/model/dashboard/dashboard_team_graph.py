@@ -13,10 +13,10 @@ from collections import defaultdict
 
 
 class CollaborationGraph:
-    def __init__(self,save_func,report_dir):
+    def __init__(self,save_func,report_dir,repo,token):
         load_dotenv()
-        self.token = os.getenv("GITHUB_TOKEN")
-        self.repository = os.getenv("GITHUB_REPOSITORY")
+        self.token = token
+        self.repository = repo
         self.save_func = save_func
         self.report_dir = report_dir
         if not self.token or not self.repository:
