@@ -1,7 +1,7 @@
 # tests/test_dashboard_developer.py
 
 import pytest
-from reportify.model.dashboard.dashboard_developer import DeveloperStats
+from src.reportify.model.dashboard.dashboard_developer import DeveloperStats
 import os
 
 

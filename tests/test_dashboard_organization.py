@@ -1,7 +1,7 @@
 # tests/test_dashboard_organization.py
 
 import pytest
-from reportify.model.dashboard.dashboard_organization import OrganizationalDashboard
+from src.reportify.model.dashboard.dashboard_organization import OrganizationalDashboard
 import os
 import pandas as pd
 class FakeCacheItem:

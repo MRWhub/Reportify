@@ -1,7 +1,7 @@
 # tests/test_dashboard_repository.py
 
 import pytest
-from reportify.model.dashboard.dashboard_team_graph import CollaborationGraph
+from src.reportify.model.dashboard.dashboard_team_graph import CollaborationGraph
 import os
 
 

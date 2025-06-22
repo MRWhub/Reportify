@@ -1,7 +1,7 @@
 # tests/test_dashboard_repository.py
 
 import pytest
-from reportify.model.dashboard.dashboard_repository import GitHubIssueStats
+from src.reportify.model.dashboard.dashboard_repository import GitHubIssueStats
 import os
 
 

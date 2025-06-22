@@ -1,6 +1,6 @@
 # tests/test_report.py
 
-from reportify.report import Report
+from src.reportify.report import Report
 import os
 from datetime import datetime
 
