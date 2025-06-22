@@ -584,7 +584,7 @@ class OrganizationalDashboard (AbstractDashboard):
         markdown = self.generate_markdown_report(stats, weekly_data, mc_results)
         if self.save_func is None:
             raise ValueError("Função de salvamento não definida. Por favor, forneça uma função de salvamento válida.")
-        self.save_func(self.report_dir, "organization_stats.md", markdown)
+        self.save_func("organization_stats.md", markdown)
         print("📄 Relatório gerado com sucesso: organization_stats.md")
         
         

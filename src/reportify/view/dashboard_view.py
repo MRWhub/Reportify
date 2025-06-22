@@ -3,10 +3,9 @@ import os
 import getpass
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
-from dotenv import load_dotenv, find_dotenv
 import os
 import getpass
-
+from reportify.model.exceptions.exit_blank_choice_exception import ExitNoChoice
 class CredentialsLoader:
     def __init__(self, dotenv_path=None):
         """
@@ -17,7 +16,7 @@ class CredentialsLoader:
         if dotenv_path:
             dotenv_file = os.path.abspath(dotenv_path)
         else:
-            dotenv_file = find_dotenv()
+            dotenv_file = self._load_env_from_ancestors()
 
         if dotenv_file and os.path.exists(dotenv_file):
             load_dotenv(dotenv_file)
@@ -28,6 +27,24 @@ class CredentialsLoader:
         self.token = None
         self.repository = None
 
+    def _load_env_from_ancestors(self, filename=".env", max_depth=5):
+        """
+        Busca recursivamente o arquivo .env até N níveis acima do diretório atual.
+
+        :param filename: Nome do arquivo .env
+        :param max_depth: Profundidade máxima para subir
+        :return: Caminho absoluto do .env encontrado ou None
+        """
+        current_path = Path(__file__).resolve().parent
+
+        for _ in range(max_depth + 1):
+            env_path = current_path / filename
+            if env_path.exists():
+                return str(env_path)
+            current_path = current_path.parent
+
+        print("❌ Arquivo .env não encontrado nas pastas superiores.")
+        return None   
     def load(self):
         """
         Carrega as credenciais de variáveis de ambiente ou solicita via input.
@@ -44,8 +61,7 @@ class CredentialsLoader:
             self.repository = input("📦 Digite o GITHUB_REPOSITORY (ex: user/repo): ")
 
         print("\n✅ Credenciais carregadas com sucesso!")
-        print(f"📦 Repositório: {self.repository}")
-        print(f"🔑 Token: {self.token[:4]}... (oculto)")
+
 
         return self.token, self.repository
 
@@ -64,10 +80,11 @@ class DashboardSelection:
         print("4 - Team Stats")
         print("5 - Collaboration Graph")
         print("0 - Todos")
-
+        print("ENTER - SAIR")
         selections = input("\nDigite os números separados por vírgula (ex: 1,3,5 ou 0 para todos): ")
         selections = selections.replace(" ", "").split(",")
-
+        if selections == [""]:
+            raise ExitNoChoice("Nenhuma seleção feita. Saindo...")
         if "0" in selections:
             selections = ["1", "2", "3", "4", "5"]
 

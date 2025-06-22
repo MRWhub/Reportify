@@ -15,7 +15,7 @@ matplotlib.rcParams['font.sans-serif'] = ['Noto Color Emoji', 'DejaVu Sans']
 
 
 class GitHubIssueStats:
-    def __init__(self,save_func,report_dir,token,repo):
+    def __init__(self,save_func,token,repo):
         load_dotenv()
         self.repository = repo
         self.token = token
@@ -24,7 +24,7 @@ class GitHubIssueStats:
         self.issues_df = pd.DataFrame()
         self.monte_carlo_simulations = 1000  # Number of Monte Carlo simulations to run
         self.save_func = save_func
-        self.report_dir = report_dir
+
     def fetch_issues(self):
         source = ab.get_source(
             "source-github",
@@ -77,8 +77,24 @@ class GitHubIssueStats:
         return {repo: df for repo, df in grouped.reset_index().groupby("repository")}
 
     def plot_weekly_delivery_per_repo(self, repo_weekly_data: dict, output_dir="charts_weekly"):
+        def filter_last_six_months(df):
+            # Garantir que a coluna 'week' está em datetime
+            df["week"] = pd.to_datetime(df["week"], errors="coerce")
+
+            # Definir data de corte (últimos 6 meses)
+            six_months_ago = pd.Timestamp.now().replace(tzinfo=None) - pd.DateOffset(months=6)
+
+            # Aplicar filtro
+            df_filtered = df[df["week"] >= six_months_ago].copy()
+
+            if df_filtered.empty:
+                print("⚠️ Atenção: Nenhum dado encontrado nos últimos 6 meses.")
+
+
+            return df_filtered
         os.makedirs(output_dir, exist_ok=True)
         for repo, df in repo_weekly_data.items():
+            df = filter_last_six_months(df)
             filename = repo.replace("/", "_") + "_weekly.png"
             weeks = df["week"].dt.strftime("%Y-%m-%d")
             promised = df["promised"]
@@ -104,8 +120,26 @@ class GitHubIssueStats:
             plt.close()
 
     def plot_burnup_per_repo(self, repo_weekly_data: dict, output_dir="charts_burnup"):
+        def filter_last_six_months(df):
+            # Garantir que a coluna 'week' está em datetime
+            df["week"] = pd.to_datetime(df["week"], errors="coerce")
+
+            # Definir data de corte (últimos 6 meses)
+            six_months_ago = pd.Timestamp.now().replace(tzinfo=None) - pd.DateOffset(months=6)
+
+
+            # Aplicar filtro
+            df_filtered = df[df["week"] >= six_months_ago].copy()
+
+
+            if df_filtered.empty:
+                print("⚠️ Atenção: Nenhum dado encontrado nos últimos 6 meses.")
+
+
+            return df_filtered
         os.makedirs(output_dir, exist_ok=True)
         for repo, df in repo_weekly_data.items():
+            df = filter_last_six_months(df)
             filename = repo.replace("/", "_") + "_burnup.png"
             df = df.sort_values("week")
             df["cumulative_promised"] = df["promised"].cumsum()
@@ -620,6 +654,6 @@ class GitHubIssueStats:
         # Passando o monte_carlo_results para o método append_weekly_charts_to_markdown
         markdown += self.append_weekly_charts_to_markdown(repo_weekly_data, monte_carlo_results)
         
-        self.save_func(self.report_dir, "repository_stats.md", markdown)
+        self.save_func("repository_stats.md", markdown)
         print("✅ Markdown e gráficos salvos com sucesso!")
   

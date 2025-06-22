@@ -10,7 +10,6 @@ class AbstractDashboard(BaseModel): #Estava escrito AbstractDasboard
     token: str = ""
     cache: Any = None
     save_func: Optional[Callable] = None
-    report_dir: str = ""
     def model_post_init(self, __context):
 
         print(f"🔑 Usando repositório: {self.repo}"

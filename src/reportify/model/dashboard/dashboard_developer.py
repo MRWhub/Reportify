@@ -10,9 +10,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 class DeveloperStats:
-    def __init__(self, save_func,save_directory,token,repo):
+    def __init__(self, save_func,token,repo):
         self.save_func = save_func
-        self.save_directory = save_directory
         load_dotenv()
         self.token = token
         self.repository = repo # Ex: 'leds-conectafapes/planner'
@@ -92,12 +91,12 @@ class DeveloperStats:
         for author, group in grouped:
             md += f"## 👤 {author}\n\n"
 
-            # Filtrar para os últimos 3 meses
+            # Filtrar para os últimos 6 meses
             now = datetime.now()
             time_ago = now - pd.DateOffset(months=6)
             group_recent = group[group["created_period"] >= time_ago]
 
-            # Calcular contagens por período (apenas últimos 3 meses)
+            # Calcular contagens por período (apenas últimos 6 meses)
             created_counts = group_recent.groupby("created_period").size()
             valid_closed = group_recent.dropna(subset=["closed_period"])
             closed_counts = valid_closed.groupby("closed_period").size()
@@ -139,7 +138,7 @@ class DeveloperStats:
                 img_base64 = base64.b64encode(buf.read()).decode("utf-8")
                 md += f"![Gráfico Prometido vs Realizado](data:image/png;base64,{img_base64})\n\n"
             else:
-                md += "_Nenhum dado de prometido vs realizado disponível nos últimos 3 meses._\n\n"
+                md += "_Nenhum dado de prometido vs realizado disponível nos últimos 6 meses._\n\n"
 
             # Gráfico de Throughput (fechadas)
             # Usar valores filtrados sem NaN para o throughput
@@ -210,10 +209,10 @@ class DeveloperStats:
 
             safe_author = author.replace("/", "_").replace("\\", "_").replace(" ", "_")
             filename = f"developer_stats_{safe_author}.md"
-            self.save_func(self.save_directory, filename, md_author)
+            self.save_func( filename, md_author)
         
 
-        self.save_func(self.save_directory,'developer_stats.md',md )
+        self.save_func('developer_stats.md',md )
 
 
     def run(self):

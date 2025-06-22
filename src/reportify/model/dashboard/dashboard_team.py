@@ -6,11 +6,12 @@ import base64
 from io import BytesIO
 from dotenv import load_dotenv
 import json
+from reportify.model.exceptions.team_members_exception import NoTeamMembersError
 
 class TeamStats:
-    def __init__(self,save_func,report_dir,token,repo):
+    def __init__(self,save_func,token,repo):
         self.save_func = save_func
-        self.report_dir = report_dir
+        
         load_dotenv()
         self.token = token
         self.repository = repo # Ex: 'leds-conectafapes/planner'
@@ -36,19 +37,12 @@ class TeamStats:
         print("👥 Buscando membros das equipes...")
         source.select_streams(["team_members"])
         source.read(cache=self.cache)
-        if "team_members" in self.cache:
+        if "team_members" in self.cache and len(self.cache["team_members"]) > 0:
             self.members_df = self.cache["team_members"].to_pandas()
             print(f"✅ {len(self.members_df)} membros de equipe carregados.")
-            
-            # Verificar estrutura do DataFrame para debug
-            print(f"Colunas dos membros: {self.members_df.columns.tolist()}")
-            if "login" not in self.members_df.columns and "user" in self.members_df.columns:
-                print("Extraindo login do campo user para membros")
-                sample = self.members_df["user"].iloc[0] if not self.members_df.empty else None
-                print(f"Exemplo de user: {type(sample)} - {sample}")
         else:
-            print("⚠️ Nenhum membro de equipe encontrado.")
-            self.members_df = pd.DataFrame()
+            print("⚠️ Nenhum membro de equipe encontrado no repositório.")
+            raise NoTeamMembersError("Nenhum membro encontrado no repositório.")
             
         # Buscar issues
         print("🎫 Buscando issues...")
@@ -460,4 +454,4 @@ class TeamStats:
         """Executa todo o processo"""
         self.fetch_data()
         md = self.generate_markdown()
-        self.save_func(self.report_dir, "team_issue_stats.md",md)
+        self.save_func( "team_issue_stats.md",md)

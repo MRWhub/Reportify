@@ -9,16 +9,16 @@ import airbyte as ab
 from dotenv import load_dotenv
 import numpy as np
 from collections import defaultdict
+from reportify.model.exceptions.team_members_exception import NoTeamMembersError
 # Removida dependência do community (python-louvain)
 
 
 class CollaborationGraph:
-    def __init__(self,save_func,report_dir,repo,token):
+    def __init__(self,save_func,repo,token):
         load_dotenv()
         self.token = token
         self.repository = repo
         self.save_func = save_func
-        self.report_dir = report_dir
         if not self.token or not self.repository:
             raise ValueError("Configure GITHUB_TOKEN e GITHUB_REPOSITORY no .env")
         
@@ -41,6 +41,13 @@ class CollaborationGraph:
         source.select_streams(["issues"])
         source.read(cache=self.cache)
 
+        if "team_members" in self.cache and len(self.cache["team_members"]) > 0:
+            self.members_df = self.cache["team_members"].to_pandas()
+            print(f"✅ {len(self.members_df)} membros de equipe carregados.")
+        else:
+            print("⚠️ Nenhum membro de equipe encontrado no repositório.")
+            raise NoTeamMembersError("Nenhum membro encontrado no repositório.")
+        
         if "issues" in self.cache:
             df = self.cache["issues"].to_pandas()
             df["author"] = df["user"].apply(
@@ -842,4 +849,4 @@ class CollaborationGraph:
         self.plot_communities("collaboration_graph_communities.png")
         self.export_gexf("collaboration_graph.gexf")
         self.generate_html_interactive("collaboration_graph.html")
-        self.save_func(self.report_dir,'collaboration_report.md', md)
+        self.save_func('collaboration_report.md', md)
