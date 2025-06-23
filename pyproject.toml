@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "reportify-ifes"
 version = "0.0.2"
-description = "Trabalho Projeto de Sistemas"
+description = "Insightful dashboards for GitHub teams, repositories, and organizations."
 readme = "README.md"
 license = { text = "Apache-2.0" }
 authors = [
