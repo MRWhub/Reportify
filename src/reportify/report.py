@@ -3,7 +3,7 @@ from datetime import datetime
 import os, shutil
 import sys
 import os
-
+from dotenv import load_dotenv
 from reportify.controller.report_controller import ReportController
 class Report:
 
@@ -36,5 +36,6 @@ class Report:
         '''
         
 if __name__ == "__main__":
+    load_dotenv()
     Report().run()
     
