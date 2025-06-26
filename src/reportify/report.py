@@ -8,9 +8,6 @@ from reportify.controller.report_controller import ReportController
 class Report:
 
     def __init__(self):
-
-
-
         os.makedirs("organization_charts", exist_ok=True)
     def salvar_markdown(self,filename, content):
         now = datetime.now()

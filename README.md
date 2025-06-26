@@ -10,6 +10,43 @@
 - Python **3.10** obrigatoriamente.  
 Outras versões podem não ser compatíveis.
 
+### 💡 Caso não tenha essa versão instalada, use `pyenv` para configurar o Python 3.10.12 (Ubuntu/Debian)
+
+1. **Instale as dependências do sistema**:
+
+```bash
+sudo apt update
+sudo apt install -y make build-essential libssl-dev zlib1g-dev \
+  libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+  libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev \
+  libffi-dev liblzma-dev git
+  curl https://pyenv.run | bash
+```
+2. **Adicione o pyenv ao seu shell (.bashrc, .zshrc, etc):**
+
+```bash
+# Adicione ao final do arquivo
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+```
+3. **Após isso, reabra o terminal ou execute:**
+```bash
+ source ~/.bashrc
+ ```
+4. **Instale o Python 3.10.12 no diretório que deseja executar a ferramenta:**
+
+```bash
+pyenv install 3.10.12
+pyenv local 3.10.12
+ ```
+5. **Crie um ambiente virtual com pyenv-virtualenv:** 
+
+```bash
+pyenv virtualenv 3.10.12 reportify-env
+pyenv activate reportify-env
+ ```
 ### Instale via pip:
 
 ```bash
@@ -25,10 +62,8 @@ GITHUB_REPOSITORY=usuario/repositorio
 
 🏃‍♂️ Como utilizar
 Crie um arquivo Python, por exemplo gerar_relatorio.py, com o seguinte conteúdo:
-
-from reportify import Report
-
 ```bash
+from reportify import Report
 relatorio = Report()
 relatorio.run()
 ```
