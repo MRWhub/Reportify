@@ -84,3 +84,62 @@ Foca na dinâmica da equipe, mostrando como os membros colaboram, distribuição
 
 🔹 CollaborationGraph
 Cria um grafo de colaboração que representa visualmente como os membros da equipe interagem entre si por meio de revisões, commits, comentários e interações em issues.
+
+# 🚀 Agendamento de Resumos Diários dos Desenvolvedores com GitHub Actions 
+
+Este repositório permite gerar os relatórios automaticamente e enviar um resumo todos os dias utilizando **GitHub Actions**, **Gemini AI (Google)** e **Discord Webhooks**.
+
+---
+
+## 📁 Etapas de configuração
+
+### 1. 🔱 Fork do Repositório
+
+Caso deseje usar esse sistema com seu próprio repositório:
+
+1. Clique em **Fork** (canto superior direito)
+2. Escolha sua conta para onde o fork será feito
+
+---
+
+### 2. 🔐 Configurar Secrets no repositório
+
+Com o fork criado, acesse:
+
+> **Settings** > **Secrets and variables** > **Actions** > **New repository secret**
+
+Adicione os seguintes **4 secrets obrigatórios**:
+
+| Nome                | Descrição                                           |
+|---------------------|-----------------------------------------------------|
+| `GITHUB_REPOSITORY` | Nome do repositório GitHub que será analisado, exemplo: `n8n-io/n8n` |
+| `GITHUB_TOKEN`      | Token de acesso pessoal (com permissão de leitura de repositório privado, se necessário) |
+| `GOOGLE_API_KEY`    | Chave da API do Google Gemini, crie sua chave gratuita [aqui](https://aistudio.google.com/app/apikey).                      |
+| `DISCORD_WEBHOOK`   | Webhook do canal ou servidor do Discord            |
+
+---
+
+### 3. 🕐 Ajustar horário de execução no GitHub Actions
+
+O agendamento de execução diária é feito no arquivo:
+
+`.github/workflows/run.yml`
+
+No trecho:
+
+```yaml
+on:
+  schedule:
+    - cron: '0 11 * * *'  # Executa todos os dias às 08h BRT (11h UTC)
+```
+- Para alterar o horário:
+
+A hora (11) está em formato UTC
+
+Para rodar às 09h da manhã no Brasil (BRT) → use cron: '0 12 * * *'
+
+Para rodar às 06h da manhã no Brasil → cron: '0 9 * * *'
+
+É possível configurar o cron de outras formas: [Saiba mais](https://en.wikipedia.org/wiki/Cron)
+
+#### Após essa configuração, os relatórios serão gerados e os resumos feitos por IA serão enviados automaticamente para o seu canal/servidor discord.
