@@ -17,45 +17,52 @@ class ReportController:
         """Executa os relatórios de acordo com a seleção do usuário."""
 
         if "1" in selections:
-            DeveloperStats(
-                save_func=self.save_func,
-               
-                token=self.token,
-                repo=self.git_repo,
-            ).run()
+            
+                DeveloperStats(
+                    save_func=self.save_func,
+                    token=self.token,
+                    repo=self.git_repo,
+                ).run()
+        
 
         if "2" in selections:
-            OrganizationalDashboard(
-                save_func=self.save_func,
-              
-                token=self.token,
-                repo=self.git_repo,
-            ).run()
+     
+                OrganizationalDashboard(
+                    save_func=self.save_func,
+                
+                    token=self.token,
+                    repo=self.git_repo,
+                ).run()
+ 
 
         if "3" in selections:
-            GitHubIssueStats(
-                save_func=self.save_func,
-              
-                token=self.token,
-                repo=self.git_repo,
-            ).run()
+   
+                GitHubIssueStats(
+                    save_func=self.save_func,
+                
+                    token=self.token,
+                    repo=self.git_repo,
+                ).run()
+   
 
         if "4" in selections:
-            TeamStats(
-                save_func=self.save_func,
-          
-                token=self.token,
-                repo=self.git_repo,
-            ).run()
+           
+                TeamStats(
+                    save_func=self.save_func,
+            
+                    token=self.token,
+                    repo=self.git_repo,
+                ).run()
 
         if "5" in selections:
-            CollaborationGraph(
-                save_func=self.save_func,
-              
-                token=self.token,
-                repo=self.git_repo,
-            ).run()
-
+            
+                CollaborationGraph(
+                    save_func=self.save_func,
+                
+                    token=self.token,
+                    repo=self.git_repo,
+                ).run()
+            
 
     
     def open_view(self):

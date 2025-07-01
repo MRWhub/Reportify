@@ -19,18 +19,18 @@ class Report:
             f.write(content)
         print(f"📄 Markdown salvo em: {path}")
 
-    def run(self):
+    def run(self,save_cache_db = False):
         
         controller = ReportController(self.salvar_markdown)
         controller.open_view()  
         print("✅ Relatório gerado com sucesso!")
        
         
-        '''   
-        if os.path.exists(".cache"):
-            shutil.rmtree(".cache")
-            print("🧹 Cache removido.")
-        '''
+        if not save_cache_db:
+            if os.path.exists(".cache"):
+                shutil.rmtree(".cache")
+                print("🧹 Cache removido.")
+        
         
 if __name__ == "__main__":
     load_dotenv()
